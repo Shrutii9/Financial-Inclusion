@@ -102,3 +102,57 @@
     height: 24px;
     cursor: pointer;
 }
+
+.buttonizer-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.main-float-btn {
+    background-color: #03A9F4;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.float-btn-group {
+    position: absolute;
+    bottom: 70px; /* push above main button */
+    right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* increased gap between buttons */
+    z-index: 1;
+}
+
+.float-btn {
+    background-color: #4FC3F7;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.float-btn img {
+    width: 24px;
+    height: 24px;
+}
+
+.float-btn:hover {
+    background-color: #0288D1;
+}
