@@ -14,6 +14,9 @@ const LandingPage = () => {
     const recognitionRef = useRef(null);
     const recognitionRunningRef = useRef(false);
     const [showFloatBtns, setShowFloatBtns] = useState(false);
+    const [showChat, setShowChat] = useState(false);
+    const [messages, setMessages] = useState([{ sender: 'bot', text: 'Hello! How can I assist you today?' }]);
+    const [inputText, setInputText] = useState('');
 
 
 
@@ -112,6 +115,19 @@ const LandingPage = () => {
             recognitionRunningRef.current = false;
         }
     };
+
+    const handleSend = () => {
+        if (inputText.trim() === '') return;
+        setMessages((prev) => [...prev, { sender: 'user', text: inputText }]);
+
+        // Simulate bot reply
+        setTimeout(() => {
+            setMessages((prev) => [...prev, { sender: 'bot', text: 'Thanks! We will get back to you shortly.' }]);
+        }, 1000);
+
+        setInputText('');
+    };
+
 
 
     useEffect(() => {
@@ -242,10 +258,11 @@ const LandingPage = () => {
                             <button
                                 className="float-btn"
                                 onMouseEnter={() => handleHover('Support')}
-                                onClick={() => window.location.href = '/support'}
+                                onClick={() => setShowChat(!showChat)} // ⬅ toggle chat window
                             >
                                 <img src={supportIcon} alt="Support" />
                             </button>
+
                             <button
                                 className="float-btn"
                                 onMouseEnter={() => handleHover('E-learning')}
@@ -255,6 +272,34 @@ const LandingPage = () => {
                             </button>
                         </div>
                     )}
+
+                    {showChat && (
+                        <div className="chat-popup">
+                            <div className="chat-header">
+                                <span>Support Chat</span>
+                                <button onClick={() => setShowChat(false)}>✖</button>
+                            </div>
+                            <div className="chat-body">
+                                {messages.map((msg, index) => (
+                                    <div key={index} className={`chat-message ${msg.sender}`}>
+                                        {msg.text}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="chat-input-area">
+                                <input
+                                    type="text"
+                                    placeholder="Type your message..."
+                                    value={inputText}
+                                    onChange={(e) => setInputText(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                                />
+                                <button onClick={handleSend}>Send</button>
+                            </div>
+                        </div>
+                    )}
+
+
                 </div>
 
 
