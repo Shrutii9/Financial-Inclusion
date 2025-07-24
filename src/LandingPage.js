@@ -13,6 +13,8 @@ const LandingPage = () => {
     const [ttsEnabled, setTtsEnabled] = useState(true);
     const recognitionRef = useRef(null);
     const recognitionRunningRef = useRef(false);
+    const [showFloatBtns, setShowFloatBtns] = useState(false);
+
 
 
     const speakText = (text, callback = null) => {
@@ -228,6 +230,34 @@ const LandingPage = () => {
                     <button onMouseEnter={() => handleHover('Know credit eligibility?')}>Know credit eligibility?</button>
                     <button onMouseEnter={() => handleHover('Understand Finance?')}>Understand Finance?</button>
                 </div>
+
+                {/* Floating Buttonizer Style */}
+                <div className="buttonizer-container">
+                    <button className="main-float-btn" onClick={() => setShowFloatBtns(!showFloatBtns)}>
+                        {showFloatBtns ? '✖' : '+'}
+                    </button>
+
+                    {showFloatBtns && (
+                        <div className="float-btn-group">
+                            <button
+                                className="float-btn"
+                                onMouseEnter={() => handleHover('Support')}
+                                onClick={() => window.location.href = '/support'}
+                            >
+                                <img src={supportIcon} alt="Support" />
+                            </button>
+                            <button
+                                className="float-btn"
+                                onMouseEnter={() => handleHover('E-learning')}
+                                onClick={() => window.location.href = '/elearning'}
+                            >
+                                <img src={elearningIcon} alt="E-learning" />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+
             </div>
         </div>
     );
