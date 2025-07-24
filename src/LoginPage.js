@@ -11,6 +11,8 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const [listening, setListening] = useState(false);
     const navigate = useNavigate();
+    const [hasInteracted, setHasInteracted] = useState(false);
+
 
     const speakText = (text, callback = null) => {
         if ('speechSynthesis' in window) {
@@ -85,33 +87,39 @@ const LoginPage = () => {
     };
 
     useEffect(() => {
-        const welcomeMessage =
-            'Welcome to the login page. Say "typing mode" to use your keyboard, or say "speaking mode" to provide your details verbally.';
-        speakText(welcomeMessage, () => {
-            const recognition = new webkitSpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
+        if (!hasInteracted) {
+            setHasInteracted(true);
 
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase();
-                if (transcript.includes('typing mode')) {
-                    speakText('Typing mode activated. Please fill out the form.');
-                } else if (transcript.includes('speaking mode')) {
-                    speakText('Speaking mode activated. Please provide your email.', () =>
-                        startSpeechRecognition('email', () => proceedToNextField('email'))
-                    );
-                } else {
-                    speakText('Command not recognized. Please say "typing mode" or "speaking mode".');
-                }
-            };
+            const welcomeMessage =
+                'Welcome to the login page. Say "typing mode" to use your keyboard, or say "speaking mode" to provide your details verbally.';
 
-            recognition.onerror = () => {
-                console.error('Speech recognition error.');
-            };
+            speakText(welcomeMessage, () => {
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
 
-            recognition.start();
-        });
-    }, []);
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+
+                    if (transcript.includes('typing mode')) {
+                        speakText('Typing mode activated. Please fill out the form.');
+                    } else if (transcript.includes('speaking mode')) {
+                        speakText('Speaking mode activated. Please provide your email.', () =>
+                            startSpeechRecognition('email', () => proceedToNextField('email'))
+                        );
+                    } else {
+                        speakText('Command not recognized. Please say "typing mode" or "speaking mode".');
+                    }
+                };
+
+                recognition.onerror = () => {
+                    console.error('Speech recognition error.');
+                };
+
+                recognition.start();
+            });
+        }
+    }, [hasInteracted]);
 
     useEffect(() => {
         const handleKeyPress = (e) => {

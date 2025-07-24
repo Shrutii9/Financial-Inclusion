@@ -1,5 +1,5 @@
 /* global webkitSpeechRecognition */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './LandingPage.css';
 import currencyIcon from './assets/icons/rupee-symbol.svg';
 import creditIcon from './assets/icons/e-credit.svg';
@@ -10,9 +10,13 @@ import logoutIcon from './assets/icons/logout.png';
 
 const LandingPage = () => {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+    const [ttsEnabled, setTtsEnabled] = useState(true);
+    const recognitionRef = useRef(null);
+    const recognitionRunningRef = useRef(false);
+
 
     const speakText = (text, callback = null) => {
-        if ('speechSynthesis' in window) {
+        if ('speechSynthesis' in window && ttsEnabled) {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
             utterance.pitch = 1;
@@ -25,47 +29,6 @@ const LandingPage = () => {
         }
     };
 
-    const startVoiceNavigation = () => {
-        if ('webkitSpeechRecognition' in window) {
-            const recognition = new webkitSpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase();
-
-                if (transcript.includes('currency')) {
-                    handleNavigation('/currency');
-                } else if (transcript.includes('credit')) {
-                    handleNavigation('/credit');
-                } else if (transcript.includes('analytics') || transcript.includes('analysis')) {
-                    handleNavigation('/analytics');
-                } else if (transcript.includes('support')) {
-                    window.location.href = '/support';
-                } else if (transcript.includes('e-learning') || transcript.includes('learning')) {
-                    window.location.href = '/elearning';
-                } else if (transcript.includes('logout')) {
-                    localStorage.clear();
-                    window.location.href = '/login';
-                } else if (transcript.includes('say again')) {
-                    speakText(instructions, startVoiceNavigation);
-                } else {
-                    speakText('Command not recognized. Try saying currency, credit, analytics, support, or e-learning.', startVoiceNavigation);
-                }
-            };
-
-            recognition.onerror = () => {
-                speakText('There was an error. Please try again.', startVoiceNavigation);
-            };
-
-            recognition.onend = () => {
-                recognition.start();
-            };
-
-            recognition.start();
-        }
-    };
-
     const handleNavigation = (path) => {
         if (isLoggedIn) {
             window.location.href = path;
@@ -74,15 +37,90 @@ const LandingPage = () => {
         }
     };
 
-    const instructions = 'Welcome to DB Pocket. Say currency, credit, analytics, support, or e-learning.';
+    const instructions = 'Welcome to DB Pocket. Say currency, credit, analytics, support, e-learning or say disable voice to mute me.';
+
+    const processCommand = (transcript) => {
+        const command = transcript.toLowerCase();
+        console.log("Heard:", command);
+
+        if (command.includes('bye')) {
+            setTtsEnabled(false);
+        } else if (command.includes('hi')) {
+            setTtsEnabled(true);
+            speakText("Voice enabled");
+        } else if (command.includes('currency')) {
+            handleNavigation('/currency');
+        } else if (command.includes('credit')) {
+            handleNavigation('/credit');
+        } else if (command.includes('analytics') || command.includes('analysis')) {
+            handleNavigation('/analytics');
+        } else if (command.includes('support')) {
+            window.location.href = '/support';
+        } else if (command.includes('e-learning') || command.includes('learning')) {
+            window.location.href = '/elearning';
+        } else if (command.includes('logout')) {
+            localStorage.clear();
+            window.location.href = '/login';
+        } else if (command.includes('say again')) {
+            speakText(instructions);
+        } else {
+            speakText('Command not recognized. Try saying currency, credit, analytics, support, or e-learning.');
+        }
+    };
+
+    const startVoiceRecognition = () => {
+        if (!('webkitSpeechRecognition' in window)) return;
+
+        if (recognitionRunningRef.current) return;
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.continuous = true;
+
+        recognition.onstart = () => {
+            recognitionRunningRef.current = true;
+            console.log('🎤 Voice recognition started');
+        };
+
+        recognition.onend = () => {
+            recognitionRunningRef.current = false;
+            console.log('🎤 Voice recognition ended');
+            setTimeout(() => startVoiceRecognition(), 800);
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[event.results.length - 1][0].transcript;
+            processCommand(transcript);
+        };
+
+        recognition.onerror = (e) => {
+            recognitionRunningRef.current = false;
+            console.error('Speech recognition error:', e.error);
+        };
+
+        recognition.start();
+        recognitionRef.current = recognition;
+    };
+
+
+    const stopRecognition = () => {
+        if (recognitionRef.current) {
+            recognitionRef.current.stop();
+            recognitionRunningRef.current = false;
+        }
+    };
+
 
     useEffect(() => {
         const onUserClick = () => {
-            speakText(instructions, startVoiceNavigation);
+            speakText(instructions);
+            startVoiceRecognition();
             window.removeEventListener('click', onUserClick);
         };
         window.addEventListener('click', onUserClick);
-        return () => window.removeEventListener('click', onUserClick);
+
+        return () => stopRecognition();
     }, []);
 
     const handleHover = (text) => speakText(text);
@@ -113,6 +151,17 @@ const LandingPage = () => {
 
             <div className="home-section">
                 <h2>Home</h2>
+
+                <button
+                    className="toggle-button"
+                    onClick={() => {
+                        const newState = !ttsEnabled;
+                        setTtsEnabled(newState);
+                        if (newState) speakText("Voice enabled");
+                    }}
+                >
+                    {ttsEnabled ? '🔊 Voice ON' : '🔇 Voice OFF'}
+                </button>
 
                 <div className="info-cards">
                     <div
@@ -184,4 +233,4 @@ const LandingPage = () => {
     );
 };
 
-export default LandingPage;
+export default LandingPage
