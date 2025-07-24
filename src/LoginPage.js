@@ -155,6 +155,18 @@ const LoginPage = () => {
                     <button type="button" onClick={handleSubmit}>
                         Login
                     </button>
+
+                    <button
+                        type="button"
+                        className="register-btn"
+                        onClick={() => {
+                            speakText('Redirecting to registration page', () => {
+                                navigate('/registration');
+                            });
+                        }}
+                    >
+                        Register
+                    </button>
                 </form>
                 {listening && <p className="listening">Listening...</p>}
             </div>
