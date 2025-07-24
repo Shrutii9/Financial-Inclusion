@@ -1,0 +1,104 @@
+.dbhack {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #fdfdfd;
+    color: #333;
+}
+
+.dbhack .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.dbhack .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.dbhack .brand {
+    color: #337ab7;
+}
+
+.dbhack .user-info {
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.dbhack .home-section h2 {
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+.dbhack .info-cards {
+    display: flex;
+    gap: 30px;
+    margin: 30px 75px;
+    justify-content: space-evenly;
+}
+
+.dbhack .card {
+    flex: 1 1;
+    background: #f0f0f0;
+    padding: 49px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.dbhack .icon-row {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    gap: 10px;
+}
+
+.dbhack .icon-button {
+    text-align: center;
+    cursor: pointer;
+}
+
+.dbhack .icon-button img {
+    width: 50px;
+    height: 50px;
+}
+
+.dbhack .icon-button p {
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.dbhack .quiz-section {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.dbhack .quiz-section button {
+    padding: 105px 89px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.dbhack .user-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dbhack .logout-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
