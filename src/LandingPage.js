@@ -17,7 +17,11 @@ const LandingPage = () => {
     const [showChat, setShowChat] = useState(false);
     const [messages, setMessages] = useState([{ sender: 'bot', text: 'Hello! How can I assist you today?' }]);
     const [inputText, setInputText] = useState('');
-
+    const [showElearningChat, setShowElearningChat] = useState(false);
+    const [elearningMessages, setElearningMessages] = useState([
+        { sender: 'bot', text: 'Welcome to E-learning support! What would you like to learn today?' }
+    ]);
+    const [elearningInput, setElearningInput] = useState('');
 
 
     const speakText = (text, callback = null) => {
@@ -128,7 +132,17 @@ const LandingPage = () => {
         setInputText('');
     };
 
+    const handleElearningSend = () => {
+        if (elearningInput.trim() === '') return;
+        setElearningMessages((prev) => [...prev, { sender: 'user', text: elearningInput }]);
 
+        // Simulate bot reply
+        setTimeout(() => {
+            setElearningMessages((prev) => [...prev, { sender: 'bot', text: 'We recommend checking our beginner modules.' }]);
+        }, 1000);
+
+        setElearningInput('');
+    };
 
     useEffect(() => {
         const onUserClick = () => {
@@ -258,7 +272,10 @@ const LandingPage = () => {
                             <button
                                 className="float-btn"
                                 onMouseEnter={() => handleHover('Support')}
-                                onClick={() => setShowChat(!showChat)} // ⬅ toggle chat window
+                                onClick={() => {
+                                    setShowChat(!showChat);
+                                    setShowElearningChat(false); // close other chat
+                                }}
                             >
                                 <img src={supportIcon} alt="Support" />
                             </button>
@@ -266,11 +283,15 @@ const LandingPage = () => {
                             <button
                                 className="float-btn"
                                 onMouseEnter={() => handleHover('E-learning')}
-                                onClick={() => window.location.href = '/elearning'}
+                                onClick={() => {
+                                    setShowElearningChat(!showElearningChat);
+                                    setShowChat(false); // close other chat
+                                }}
                             >
                                 <img src={elearningIcon} alt="E-learning" />
                             </button>
                         </div>
+
                     )}
 
                     {showChat && (
@@ -298,6 +319,33 @@ const LandingPage = () => {
                             </div>
                         </div>
                     )}
+
+                    {showElearningChat && (
+                        <div className="chat-popup elearning-chat">
+                            <div className="chat-header">
+                                <span>E-learning Chat</span>
+                                <button onClick={() => setShowElearningChat(false)}>✖</button>
+                            </div>
+                            <div className="chat-body">
+                                {elearningMessages.map((msg, index) => (
+                                    <div key={index} className={`chat-message ${msg.sender}`}>
+                                        {msg.text}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="chat-input-area">
+                                <input
+                                    type="text"
+                                    placeholder="Ask your learning question..."
+                                    value={elearningInput}
+                                    onChange={(e) => setElearningInput(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleElearningSend()}
+                                />
+                                <button onClick={handleElearningSend}>Send</button>
+                            </div>
+                        </div>
+                    )}
+
 
 
                 </div>

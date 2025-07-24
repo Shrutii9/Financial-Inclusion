@@ -260,3 +260,7 @@
     border-bottom-right-radius: 10px;
     cursor: pointer;
 }
+
+.elearning-chat .chat-header {
+    background: #1aa8c7;
+}
