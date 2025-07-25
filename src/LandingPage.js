@@ -60,7 +60,7 @@ const LandingPage = () => {
         } else if (command.includes('currency')) {
             handleNavigation('/currency');
         } else if (command.includes('credit')) {
-            handleNavigation('/credit');
+            handleNavigation('/ecredit');
         } else if (command.includes('analytics') || command.includes('analysis')) {
             handleNavigation('/analytics');
         } else if (command.includes('support')) {
@@ -160,7 +160,9 @@ const LandingPage = () => {
     return (
         <div className="dbhack">
             <div className="top-bar">
-                <div className="logo">📘 <span className="brand">dbPocket</span></div>
+                <div className="logo">
+                    <img src={require('./assets/icons/pocket-logo.png')} alt="dbPocket Logo" className="logo-img" />
+                </div>
                 <div className="user-right">
                     <div
                         className="user-info"
@@ -206,7 +208,7 @@ const LandingPage = () => {
                     <div
                         className="card"
                         onMouseEnter={() => handleHover('Credit Details')}
-                        onClick={() => handleNavigation('/credit')}
+                        onClick={() => handleNavigation('/ecredit')}
                     >
                         Credit Details
                     </div>
@@ -224,7 +226,7 @@ const LandingPage = () => {
                     <div
                         className="icon-button"
                         onMouseEnter={() => handleHover('e-Credit')}
-                        onClick={() => handleNavigation('/credit')}
+                        onClick={() => handleNavigation('/ecredit')}
                     >
                         <img src={creditIcon} alt="e-Credit" />
                         <p>e-Credit</p>

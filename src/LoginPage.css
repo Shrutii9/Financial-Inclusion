@@ -96,3 +96,9 @@
 .login-page .register-btn:hover {
     background-color: #e0e0e0;
 }
+
+.logo-img {
+    height: 60px;
+    width: auto; 
+    object-fit: contain;
+}

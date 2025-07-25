@@ -1,0 +1,246 @@
+.ecredit-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.ecredit-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.input-with-mic {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-mic input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  font-size: 1rem;
+}
+
+.input-with-mic button {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.submit-btn-container {
+  grid-column: 1 / -1; /* full width */
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.submit-btn {
+  padding: 10px 25px;
+  font-size: 1rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #1259a6;
+}
+
+
+.ecredit-form {
+  display: flex;
+  gap: 30px;
+}
+
+.form-left {
+  flex: 1;
+  max-width: 220px;
+  padding: 10px;
+  background-color: #eef1f4;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: start;
+}
+
+.form-left input[type="file"] {
+  width: 100%;
+}
+
+.form-right {
+  flex: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.disabled-form .form-right {
+  filter: blur(2px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.verify-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.verified-msg {
+  color: green;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .ecredit-form {
+    flex-direction: column;
+  }
+  .form-left {
+    max-width: 100%;
+    width: 100%;
+  }
+  .form-right {
+    grid-template-columns: 1fr;
+  }
+}
+
+.disabled-form {
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.form-left {
+  grid-column: 1 / 2;
+}
+
+.form-right {
+  grid-column: 2 / 3;
+}
+
+.form-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.form-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 0 0 200px;
+}
+
+.verify-btn, .capture-btn {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.verified-msg {
+  color: green;
+  font-weight: bold;
+}
+
+.blurred {
+  pointer-events: none;
+  opacity: 0.5;
+  filter: blur(1px);
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.video-preview {
+  width: 300px;
+  height: auto;
+  border: 2px solid #333;
+  margin-top: 10px;
+}
+
+.captured-img {
+  margin-top: 10px;
+  width: 300px;
+  border: 2px solid #2a9d8f;
+}
+
+
+
+
+
+
+
