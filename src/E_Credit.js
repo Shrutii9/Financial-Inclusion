@@ -29,6 +29,9 @@ const Ecredit = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [showCaptureModal, setShowCaptureModal] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
+  // New state for prediction result popup
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [predictionResult, setPredictionResult] = useState(null);
 
   const fileInputRef = useRef(null);
   const verifyBtnRef = useRef(null);
@@ -78,15 +81,104 @@ const Ecredit = () => {
     speak(`Enter ${label}`);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!verified) {
       speak("Please verify yourself first.");
+      alert('Please verify yourself first.'); // Using custom alert as per previous instructions
       return;
     }
-    speak('Form submitted successfully');
-    console.log('Submitted Data:', formData);
-    alert('Form submitted successfully!');
+
+    // Construct the payload for Vertex AI
+    const payload = {
+      instances: [
+        {
+          "Application_Date": new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-'),
+          "Loan_Type": formData.loanType || "",
+          "Loan_Amount_Requested": parseFloat(formData.loanAmount).toFixed(1) || "0.0",
+          "Interest_Rate_Offered": "9.9", // Example static value, adjust as needed
+          "Employment_Status": formData.employmentStatus || "",
+          "Monthly_Income": parseFloat(formData.monthlyIncome).toFixed(1) || "0.0",
+          "Existing_EMIs_Monthly": parseFloat(formData.existingEmis).toFixed(1) || "0.0",
+          "Debt_to_Income_Ratio": parseFloat(formData.debtToIncomeRatio).toFixed(2) || "0.0",
+          "Property_Ownership_Status": formData.propertyOwnership || "",
+          "Residential_Address": formData.address || "",
+          "Applicant_Age": formData.age || "20",
+          "Gender": formData.gender || "",
+          "Number_of_Dependents": formData.dependents || "1",
+          "Asset_Type_Valuation": parseFloat(formData.assetValuation).toFixed(1) || "0.0",
+          "Loan_Limit": "1100000.0" // Example static value, adjust as needed
+        }
+      ]
+    };
+
+    // Vertex AI Endpoint details
+    const projectId = "826364400972";
+    const endpointId = "3722644005951897600";
+    const location = "us-central1";
+    const apiUrl = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/endpoints/${endpointId}:predict`;
+
+    try {
+      const accessToken = localStorage.getItem('vertexAIAccessToken');
+
+      if (!accessToken) {
+        console.error('Access token not found in localStorage. Please set it using the browser console.');
+        speak('Access token is missing. Please set it in the browser cache.');
+        alert('Error: Access token not found. Please open your browser console and set "vertexAIAccessToken" in localStorage.');
+        return;
+      }
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Vertex AI Prediction Result:', result);
+
+        // Process the prediction result
+        if (result.predictions && result.predictions.length > 0) {
+          const prediction = result.predictions[0];
+          const classes = prediction.classes;
+          const scores = prediction.scores;
+
+          // Find the class with the highest score
+          let maxScore = -1;
+          let predictedClass = 'Unknown';
+          for (let i = 0; i < scores.length; i++) {
+            if (scores[i] > maxScore) {
+              maxScore = scores[i];
+              predictedClass = classes[i];
+            }
+          }
+
+          setPredictionResult({
+            class: predictedClass,
+            score: (maxScore * 100).toFixed(2) // Convert to percentage and format
+          });
+          setShowResultModal(true); // Show the result popup
+          speak(`Prediction received: ${predictedClass} with ${maxScore.toFixed(2)} confidence.`);
+        } else {
+          speak('Form submitted successfully, but no valid prediction found.');
+          alert('Form submitted successfully, but no valid prediction found.');
+        }
+
+      } else {
+        const errorText = await response.text();
+        console.error('Failed to get prediction from Vertex AI:', response.status, errorText);
+        speak('Form submission failed. Please check the console for errors.');
+        alert('Form submission failed. Check console for errors.');
+      }
+    } catch (error) {
+      console.error('Error sending data to Vertex AI:', error);
+      speak('An error occurred during form submission. Please try again.');
+      alert('An error occurred during form submission. Please try again.');
+    }
   };
 
   const handleFileChange = (e) => {
@@ -201,7 +293,7 @@ const Ecredit = () => {
         </div>
       </form>
 
-      {/* Modal */}
+      {/* Modal for Document Capture */}
       {showCaptureModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -213,6 +305,24 @@ const Ecredit = () => {
               <button onClick={captureImage}>Capture</button>
               <button onClick={handleDoneCapture} style={{ marginLeft: '10px' }}>Done</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Prediction Result */}
+      {showResultModal && predictionResult && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Prediction Result</h3>
+            <p>
+              **Predicted Status:** <span style={{ fontWeight: 'bold', color: predictionResult.class === 'Approved' ? 'green' : predictionResult.class === 'Rejected' ? 'red' : 'orange' }}>
+                {predictionResult.class}
+              </span>
+            </p>
+            <p>
+              **Confidence:** {predictionResult.score}%
+            </p>
+            <button onClick={() => setShowResultModal(false)}>Close</button>
           </div>
         </div>
       )}
