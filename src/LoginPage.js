@@ -5,6 +5,13 @@ import './LoginPage.css';
 import { getUser } from './db';
 
 const LoginPage = () => {
+    // 🚫 Force stop TTS from LandingPage
+    useEffect(() => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+    }, []);
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -13,7 +20,6 @@ const LoginPage = () => {
     const [listening, setListening] = useState(false);
     const navigate = useNavigate();
     const [hasInteracted, setHasInteracted] = useState(false);
-
 
     const speakText = (text, callback = null) => {
         if ('speechSynthesis' in window) {
@@ -68,9 +74,8 @@ const LoginPage = () => {
 
         // ✅ Simulated frontend login success
         localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('disableTtsOnce', 'true');
 
-        speakText('Login successful! Redirecting to the landing page.', () => {
+        speakText('Login successful!', () => {
             navigate('/');
         });
     };
@@ -80,7 +85,7 @@ const LoginPage = () => {
         if (existing && existing.password === formData.password?.trim()) {
             localStorage.setItem('loggedInUser', existing.name);
             localStorage.setItem('loggedInUserEmail', existing.email);
-            speakText('Login successful! Redirecting to the landing page.', () => {
+            speakText('Login successful!', () => {
                 navigate('/');
             });
         } else {
@@ -107,7 +112,7 @@ const LoginPage = () => {
             setHasInteracted(true);
 
             const welcomeMessage =
-                'Welcome to the login page. Say "typing mode" to use your keyboard, or say "speaking mode" to provide your details verbally.';
+                'Welcome to the login page. Please Choose "typing mode" or "speaking mode" to provide your details';
 
             speakText(welcomeMessage, () => {
                 const recognition = new webkitSpeechRecognition();
