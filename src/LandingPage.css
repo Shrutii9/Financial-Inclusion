@@ -173,6 +173,7 @@
     bottom: 100px;
     right: 20px;
     width: 300px;
+    height: 350px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -224,7 +225,7 @@
 
 .chat-body {
     padding: 12px;
-    height: 150px;
+    height: 250px;
     overflow-y: auto;
     flex: 1;
     display: flex;
