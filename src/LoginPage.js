@@ -68,6 +68,7 @@ const LoginPage = () => {
 
         // ✅ Simulated frontend login success
         localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('disableTtsOnce', 'true');
 
         speakText('Login successful! Redirecting to the landing page.', () => {
             navigate('/');

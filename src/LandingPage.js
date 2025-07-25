@@ -23,7 +23,6 @@ const LandingPage = () => {
     ]);
     const [elearningInput, setElearningInput] = useState('');
 
-
     const speakText = (text, callback = null) => {
         if ('speechSynthesis' in window && ttsEnabled) {
             const utterance = new SpeechSynthesisUtterance(text);
@@ -79,7 +78,6 @@ const LandingPage = () => {
 
     const startVoiceRecognition = () => {
         if (!('webkitSpeechRecognition' in window)) return;
-
         if (recognitionRunningRef.current) return;
 
         const recognition = new webkitSpeechRecognition();
@@ -112,7 +110,6 @@ const LandingPage = () => {
         recognitionRef.current = recognition;
     };
 
-
     const stopRecognition = () => {
         if (recognitionRef.current) {
             recognitionRef.current.stop();
@@ -124,7 +121,6 @@ const LandingPage = () => {
         if (inputText.trim() === '') return;
         setMessages((prev) => [...prev, { sender: 'user', text: inputText }]);
 
-        // Simulate bot reply
         setTimeout(() => {
             setMessages((prev) => [...prev, { sender: 'bot', text: 'Thanks! We will get back to you shortly.' }]);
         }, 1000);
@@ -136,7 +132,6 @@ const LandingPage = () => {
         if (elearningInput.trim() === '') return;
         setElearningMessages((prev) => [...prev, { sender: 'user', text: elearningInput }]);
 
-        // Simulate bot reply
         setTimeout(() => {
             setElearningMessages((prev) => [...prev, { sender: 'bot', text: 'We recommend checking our beginner modules.' }]);
         }, 1000);
@@ -145,6 +140,13 @@ const LandingPage = () => {
     };
 
     useEffect(() => {
+        // Check if TTS should be skipped after login
+        const disableTtsOnce = localStorage.getItem('disableTtsOnce');
+        if (disableTtsOnce === 'true') {
+            setTtsEnabled(false);
+            localStorage.removeItem('disableTtsOnce');
+        }
+
         const onUserClick = () => {
             speakText(instructions);
             startVoiceRecognition();
@@ -159,7 +161,7 @@ const LandingPage = () => {
 
     const userName = localStorage.getItem('loggedInUser');
     const userEmail = localStorage.getItem('loggedInUserEmail');
-    
+
     return (
         <div className="dbhack">
             <div className="top-bar">
@@ -167,10 +169,7 @@ const LandingPage = () => {
                     <img src={require('./assets/icons/pocket-logo.png')} alt="dbPocket Logo" className="logo-img" />
                 </div>
                 <div className="user-right">
-                    <div
-                        className="user-info"
-                        onMouseEnter={() => handleHover({userName})}
-                    >
+                    <div className="user-info" onMouseEnter={() => handleHover({ userName })}>
                         Hi {userName}
                     </div>
                     <img
@@ -187,8 +186,6 @@ const LandingPage = () => {
             </div>
 
             <div className="home-section">
-                {/* <h2>Home</h2> */}
-
                 <button
                     className="toggle-button"
                     onClick={() => {
@@ -218,43 +215,23 @@ const LandingPage = () => {
                 </div>
 
                 <div className="icon-row">
-                    <div
-                        className="icon-button"
-                        onMouseEnter={() => handleHover('e-Currency')}
-                        onClick={() => handleNavigation('/currency')}
-                    >
+                    <div className="icon-button" onMouseEnter={() => handleHover('e-Currency')} onClick={() => handleNavigation('/currency')}>
                         <img src={currencyIcon} alt="e-Currency" />
                         <p>e-Currency</p>
                     </div>
-                    <div
-                        className="icon-button"
-                        onMouseEnter={() => handleHover('e-Credit')}
-                        onClick={() => handleNavigation('/ecredit')}
-                    >
+                    <div className="icon-button" onMouseEnter={() => handleHover('e-Credit')} onClick={() => handleNavigation('/ecredit')}>
                         <img src={creditIcon} alt="e-Credit" />
                         <p>e-Credit</p>
                     </div>
-                    <div
-                        className="icon-button"
-                        onMouseEnter={() => handleHover('Analytics')}
-                        onClick={() => handleNavigation('/analytics')}
-                    >
+                    <div className="icon-button" onMouseEnter={() => handleHover('Analytics')} onClick={() => handleNavigation('/analytics')}>
                         <img src={analystIcon} alt="Analytics" />
                         <p>Analytics</p>
                     </div>
-                    <div
-                        className="icon-button"
-                        onMouseEnter={() => handleHover('Support')}
-                        onClick={() => window.location.href = '/support'}
-                    >
+                    <div className="icon-button" onMouseEnter={() => handleHover('Support')} onClick={() => window.location.href = '/support'}>
                         <img src={supportIcon} alt="Support" />
                         <p>Support</p>
                     </div>
-                    <div
-                        className="icon-button"
-                        onMouseEnter={() => handleHover('E-learning')}
-                        onClick={() => window.location.href = '/elearning'}
-                    >
+                    <div className="icon-button" onMouseEnter={() => handleHover('E-learning')} onClick={() => window.location.href = '/elearning'}>
                         <img src={elearningIcon} alt="E-learning" />
                         <p>E-learning</p>
                     </div>
@@ -266,7 +243,6 @@ const LandingPage = () => {
                     <button onMouseEnter={() => handleHover('Understand Finance?')}>Understand Finance?</button>
                 </div>
 
-                {/* Floating Buttonizer Style */}
                 <div className="buttonizer-container">
                     <button className="main-float-btn" onClick={() => setShowFloatBtns(!showFloatBtns)}>
                         {showFloatBtns ? '✖' : '+'}
@@ -274,29 +250,19 @@ const LandingPage = () => {
 
                     {showFloatBtns && (
                         <div className="float-btn-group">
-                            <button
-                                className="float-btn"
-                                onMouseEnter={() => handleHover('Support')}
-                                onClick={() => {
-                                    setShowChat(!showChat);
-                                    setShowElearningChat(false); // close other chat
-                                }}
-                            >
+                            <button className="float-btn" onMouseEnter={() => handleHover('Support')} onClick={() => {
+                                setShowChat(!showChat);
+                                setShowElearningChat(false);
+                            }}>
                                 <img src={supportIcon} alt="Support" />
                             </button>
-
-                            <button
-                                className="float-btn"
-                                onMouseEnter={() => handleHover('E-learning')}
-                                onClick={() => {
-                                    setShowElearningChat(!showElearningChat);
-                                    setShowChat(false); // close other chat
-                                }}
-                            >
+                            <button className="float-btn" onMouseEnter={() => handleHover('E-learning')} onClick={() => {
+                                setShowElearningChat(!showElearningChat);
+                                setShowChat(false);
+                            }}>
                                 <img src={elearningIcon} alt="E-learning" />
                             </button>
                         </div>
-
                     )}
 
                     {showChat && (
@@ -307,9 +273,7 @@ const LandingPage = () => {
                             </div>
                             <div className="chat-body">
                                 {messages.map((msg, index) => (
-                                    <div key={index} className={`chat-message ${msg.sender}`}>
-                                        {msg.text}
-                                    </div>
+                                    <div key={index} className={`chat-message ${msg.sender}`}>{msg.text}</div>
                                 ))}
                             </div>
                             <div className="chat-input-area">
@@ -333,9 +297,7 @@ const LandingPage = () => {
                             </div>
                             <div className="chat-body">
                                 {elearningMessages.map((msg, index) => (
-                                    <div key={index} className={`chat-message ${msg.sender}`}>
-                                        {msg.text}
-                                    </div>
+                                    <div key={index} className={`chat-message ${msg.sender}`}>{msg.text}</div>
                                 ))}
                             </div>
                             <div className="chat-input-area">
@@ -350,15 +312,10 @@ const LandingPage = () => {
                             </div>
                         </div>
                     )}
-
-
-
                 </div>
-
-
             </div>
         </div>
     );
 };
 
-export default LandingPage
+export default LandingPage;
