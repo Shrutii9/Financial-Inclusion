@@ -8,6 +8,8 @@ import supportIcon from './assets/icons/support.svg';
 import elearningIcon from './assets/icons/elearning.png';
 import logoutIcon from './assets/icons/logout.png';
 
+
+
 const LandingPage = () => {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
     const [ttsEnabled, setTtsEnabled] = useState(true);
@@ -22,6 +24,9 @@ const LandingPage = () => {
         { sender: 'bot', text: 'Welcome to E-learning support! What would you like to learn today?' }
     ]);
     const [elearningInput, setElearningInput] = useState('');
+
+    const userName = localStorage.getItem('loggedInUser');
+    const userEmail = localStorage.getItem('loggedInUserEmail');
 
     const speakText = (text, callback = null) => {
         if ('speechSynthesis' in window && ttsEnabled) {
@@ -38,7 +43,7 @@ const LandingPage = () => {
     };
 
     const handleNavigation = (path) => {
-        if (isLoggedIn) {
+        if (userName) {
             window.location.href = path;
         } else {
             window.location.href = '/login';
@@ -140,27 +145,27 @@ const LandingPage = () => {
     };
 
     useEffect(() => {
-        // Check if TTS should be skipped after login
-        const disableTtsOnce = localStorage.getItem('disableTtsOnce');
-        if (disableTtsOnce === 'true') {
-            setTtsEnabled(false);
-            localStorage.removeItem('disableTtsOnce');
+        if (window.location.pathname === '/') {
+            const disableTtsOnce = localStorage.getItem('disableTtsOnce');
+            if (disableTtsOnce === 'true') {
+                setTtsEnabled(false);
+                localStorage.removeItem('disableTtsOnce');
+            }
+
+            const onUserClick = () => {
+                speakText(instructions);
+                startVoiceRecognition();
+                window.removeEventListener('click', onUserClick);
+            };
+            window.addEventListener('click', onUserClick);
+
+            return () => stopRecognition();
         }
-
-        const onUserClick = () => {
-            speakText(instructions);
-            startVoiceRecognition();
-            window.removeEventListener('click', onUserClick);
-        };
-        window.addEventListener('click', onUserClick);
-
-        return () => stopRecognition();
     }, []);
 
     const handleHover = (text) => speakText(text);
 
-    const userName = localStorage.getItem('loggedInUser');
-    const userEmail = localStorage.getItem('loggedInUserEmail');
+
 
     return (
         <div className="dbhack">
@@ -169,7 +174,7 @@ const LandingPage = () => {
                     <img src={require('./assets/icons/pocket-logo.png')} alt="dbPocket Logo" className="logo-img" />
                 </div>
                 <div className="user-right">
-                    <div className="user-info" onMouseEnter={() => handleHover({ userName })}>
+                    <div className="user-info" onMouseEnter={() => handleHover(`Hi ${userName}`)}>
                         Hi {userName}
                     </div>
                     <img
@@ -198,18 +203,10 @@ const LandingPage = () => {
                 </button>
 
                 <div className="info-cards">
-                    <div
-                        className="card"
-                        onMouseEnter={() => handleHover('Account Details')}
-                        onClick={() => handleNavigation('/account')}
-                    >
+                    <div className="card" onMouseEnter={() => handleHover('Account Details')} onClick={() => handleNavigation('/account')}>
                         Account Details
                     </div>
-                    <div
-                        className="card"
-                        onMouseEnter={() => handleHover('Credit Details')}
-                        onClick={() => handleNavigation('/ecredit')}
-                    >
+                    <div className="card" onMouseEnter={() => handleHover('Credit Details')} onClick={() => handleNavigation('/ecredit')}>
                         Credit Details
                     </div>
                 </div>
