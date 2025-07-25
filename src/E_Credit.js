@@ -189,12 +189,58 @@ const Ecredit = () => {
     }
   };
 
-  const handleVerify = () => {
-    if (uploadedFile) {
-      setVerified(true);
-      speak("You are now verified. You may fill the form.");
-    } else {
+   
+  const handleVerify = async () => { // Made async to await the fetch call
+    if (!uploadedFile) {
       speak("Please upload a file first to verify.");
+      alert("Please upload a file first to verify.");
+      return;
+    }
+
+    const verificationApiUrl = "http://localhost:5000/compare"; // Your Python API endpoint
+
+    const formData = new FormData();
+    formData.append('id_image', uploadedFile); // 'id_image' matches the -F "id_image=@..." in curl
+
+    try {
+      speak("Sending image for verification...");
+      const response = await fetch(verificationApiUrl, {
+        method: 'POST',
+        body: formData, // FormData automatically sets Content-Type header
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Verification API Result:', result);
+
+        // Assuming the Python API returns a JSON object with a 'verified' boolean property
+        if (result && typeof result.verified === 'boolean') {
+          setVerified(result.verified);
+          if (result.verified) {
+            speak("You are now verified. You may fill the form.");
+            alert("Verification successful!");
+          } else {
+            speak("Verification failed. Id did not match with live image. Please try proper id.");
+            alert("Verification failed. Id did not match with live image. Please try proper id.");
+          }
+        } else {
+          console.error('Unexpected response from verification API:', result);
+          speak("Verification API returned an unexpected response. Please check console.");
+          alert("Verification failed: Unexpected API response.");
+          setVerified(false); // Default to not verified on unexpected response
+        }
+      } else {
+        const errorText = await response.text();
+        console.error('Failed to call verification API:', response.status, errorText);
+        speak('Verification failed. Please check the console for errors.');
+        alert('Verification failed. Check console for errors.');
+        setVerified(false);
+      }
+    } catch (error) {
+      console.error('Error during verification API call:', error);
+      speak('An error occurred during verification. Please ensure the Python API is running.');
+      alert('An error occurred during verification. Please ensure the Python API is running on http://localhost:5000 and check CORS settings.');
+      setVerified(false);
     }
   };
 
