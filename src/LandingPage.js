@@ -7,6 +7,7 @@ import analystIcon from './assets/icons/user.svg';
 import supportIcon from './assets/icons/support.svg';
 import elearningIcon from './assets/icons/elearning.png';
 import logoutIcon from './assets/icons/logout.png';
+import { callChatFunction } from './chat';
 
 const LandingPage = () => {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
@@ -133,10 +134,11 @@ const LandingPage = () => {
 
     const handleElearningSend = () => {
         if (elearningInput.trim() === '') return;
+        const response = callChatFunction(elearningInput);
         setElearningMessages((prev) => [...prev, { sender: 'user', text: elearningInput }]);
-
+        console.log("Elearning response:", response);
         setTimeout(() => {
-            setElearningMessages((prev) => [...prev, { sender: 'bot', text: 'We recommend checking our beginner modules.' }]);
+            setElearningMessages((prev) => [...prev, { sender: 'bot', text: response }]);
         }, 1000);
 
         setElearningInput('');
