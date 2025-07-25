@@ -1,9 +1,5 @@
 .ecredit-container {
-  max-width: 800px;
-  margin: 2rem auto;
   background: #f9f9f9;
-  padding: 2rem;
-  border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
@@ -11,6 +7,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  height: -webkit-fill-available;
+  display: flex;
+  flex: 0 0 60%;
 }
 
 .form-group {
@@ -74,22 +73,14 @@ label {
   background-color: #1259a6;
 }
 
-
-.ecredit-form {
-  display: flex;
-  gap: 30px;
-}
-
 .form-left {
   flex: 1;
   max-width: 220px;
   padding: 10px;
-  background-color: #eef1f4;
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   align-items: start;
+  background-color: #E3F2FD;
 }
 
 .form-left input[type="file"] {
@@ -152,7 +143,6 @@ label {
 
 .form-wrapper {
   display: flex;
-  gap: 20px;
   align-items: flex-start;
 }
 
@@ -169,7 +159,6 @@ label {
   background-color: #1976d2;
   color: white;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
 }
 
@@ -221,7 +210,6 @@ label {
 .modal-content {
   background: white;
   padding: 20px;
-  border-radius: 10px;
   text-align: center;
 }
 
@@ -238,9 +226,20 @@ label {
   border: 2px solid #2a9d8f;
 }
 
+.form-wrapper {
+  display: flex;
+  align-items: flex-start;
+}
 
+.image-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-
-
-
-
+.image-left img {
+  width: 100%;
+  max-width: fit-content;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './E_Credit.css';
+import BgCredit from './assets/icons/ECreditbg.jpg';
 
 const fields = [
   { label: "Loan Type", name: "loanType" },
@@ -249,51 +250,58 @@ const Ecredit = () => {
   return (
     <div className="ecredit-container">
       <h2 className="form-title">E-Credit Application Form</h2>
-      <form className="ecredit-form" onSubmit={handleSubmit}>
-        <div className="form-left">
-          <h4>Verification</h4>
-          <div ref={fileInputRef}>
-            <input type="file" onChange={handleFileChange} />
-          </div>
-          <div ref={verifyBtnRef}>
-            <button type="button" onClick={handleVerify} className="verify-btn">Verify</button>
-          </div>
-          <div>
-            <button type="button" className="verify-btn" style={{ marginTop: '10px' }} onClick={openCamera}>
-              Capture Document
-            </button>
-          </div>
-          {verified && <span className="verified-msg">✅ Verified</span>}
+
+      <div className="form-wrapper">
+        <div className="image-left">
+          <img src={BgCredit} alt="Form Illustration" />
         </div>
 
-        <div className="form-right">
-          {fields.map(({ label, name }) => (
-            <div key={name} className="form-group">
-              <label htmlFor={name}>{label}</label>
-              <div className="input-with-mic">
-                <input
-                  id={name}
-                  type="text"
-                  value={formData[name] || ''}
-                  onChange={(e) => setFormData({ ...formData, [name]: e.target.value })}
-                  onFocus={() => handleFocus(label)}
-                  disabled={!verified}
-                />
-                <button
-                  type="button"
-                  onClick={() => handleMicClick(name)}
-                  disabled={!verified}
-                >🎤</button>
-              </div>
+        <form className="ecredit-form" onSubmit={handleSubmit}>
+          <div className="form-left">
+            <h4>Verification</h4>
+            <div ref={fileInputRef}>
+              <input type="file" onChange={handleFileChange} />
             </div>
-          ))}
-          <div className="submit-btn-container">
-            <button type="submit" className="submit-btn" disabled={!verified}>Submit</button>
+            <div ref={verifyBtnRef}>
+              <button type="button" onClick={handleVerify} className="verify-btn">Verify</button>
+            </div>
+            <div>
+              <button type="button" className="verify-btn" style={{ marginTop: '10px' }} onClick={openCamera}>
+                Capture Document
+              </button>
+            </div>
+            {verified && <span className="verified-msg">✅ Verified</span>}
           </div>
-        </div>
-      </form>
 
-      {/* Modal for Document Capture */}
+          <div className="form-right">
+            {fields.map(({ label, name }) => (
+              <div key={name} className="form-group">
+                <label htmlFor={name}>{label}</label>
+                <div className="input-with-mic">
+                  <input
+                    id={name}
+                    type="text"
+                    value={formData[name] || ''}
+                    onChange={(e) => setFormData({ ...formData, [name]: e.target.value })}
+                    onFocus={() => handleFocus(label)}
+                    disabled={!verified}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleMicClick(name)}
+                    disabled={!verified}
+                  >🎤</button>
+                </div>
+              </div>
+            ))}
+            <div className="submit-btn-container">
+              <button type="submit" className="submit-btn" disabled={!verified}>Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      {/* Capture and Prediction Modals remain unchanged */}
       {showCaptureModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -309,19 +317,17 @@ const Ecredit = () => {
         </div>
       )}
 
-      {/* Modal for Prediction Result */}
       {showResultModal && predictionResult && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Prediction Result</h3>
             <p>
-              **Predicted Status:** <span style={{ fontWeight: 'bold', color: predictionResult.class === 'Approved' ? 'green' : predictionResult.class === 'Rejected' ? 'red' : 'orange' }}>
+              <strong>Predicted Status:</strong>{" "}
+              <span style={{ fontWeight: 'bold', color: predictionResult.class === 'Approved' ? 'green' : predictionResult.class === 'Rejected' ? 'red' : 'orange' }}>
                 {predictionResult.class}
               </span>
             </p>
-            <p>
-              **Confidence:** {predictionResult.score}%
-            </p>
+            <p><strong>Confidence:</strong> {predictionResult.score}%</p>
             <button onClick={() => setShowResultModal(false)}>Close</button>
           </div>
         </div>
