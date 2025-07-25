@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
+import { getUser } from './db';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
@@ -73,6 +74,20 @@ const LoginPage = () => {
         });
     };
 
+    const handleLogin = async () => {
+        const existing = await getUser(formData.email?.trim());
+        if (existing && existing.password === formData.password?.trim()) {
+            localStorage.setItem('loggedInUser', existing.name);
+            localStorage.setItem('loggedInUserEmail', existing.email);
+            speakText('Login successful! Redirecting to the landing page.', () => {
+                navigate('/');
+            });
+        } else {
+            setError('Invalid email id or password.');
+            speakText('Invalid email id or password.');
+        }
+    };
+
     const proceedToNextField = (current) => {
         const fieldOrder = ['email', 'password'];
         const currentIndex = fieldOrder.indexOf(current);
@@ -124,7 +139,7 @@ const LoginPage = () => {
     useEffect(() => {
         const handleKeyPress = (e) => {
             if (e.key === 'Enter') {
-                handleSubmit();
+                handleLogin();
             }
         };
 
@@ -160,7 +175,7 @@ const LoginPage = () => {
                         />
                     </div>
                     {error && <p className="error-message">{error}</p>}
-                    <button type="button" onClick={handleSubmit}>
+                    <button type="button" onClick={handleLogin}>
                         Login
                     </button>
 

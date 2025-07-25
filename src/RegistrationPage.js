@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegistrationPage.css';
 import leftImage from './assets/images/Signup3.jpg';
+import { addUser } from './db';
 
 const RegistrationPage = () => {
     const [formData, setFormData] = useState({
-        username: '',
+        name: '',
         age: '',
         mobilenumber: '',
         country: '',
@@ -66,9 +67,9 @@ const RegistrationPage = () => {
     };
 
     const handleSubmit = () => {
-        const { username, age, mobilenumber, country, email, password, confirmPassword } = formData;
+        const { name, age, mobilenumber, country, email, password, confirmPassword } = formData;
 
-        if (!username || !age || !mobilenumber || !country || !email || !password || !confirmPassword) {
+        if (!name || !age || !mobilenumber || !country || !email || !password || !confirmPassword) {
             setError('All fields are required.');
             speakText('All fields are required. Please fill them before submitting.');
             return;
@@ -80,6 +81,8 @@ const RegistrationPage = () => {
             return;
         }
 
+        addUser({ name, age, country, mobilenumber, email, password });
+
         setError('');
         setSuccess('Registration successful! Redirecting to login...');
         speakText('Registration successful! Redirecting to login.', () => {
@@ -88,7 +91,7 @@ const RegistrationPage = () => {
     };
 
     const proceedToNextField = (current) => {
-        const fieldOrder = ['username', 'age', 'mobilenumber', 'country', 'email', 'password', 'confirmPassword'];
+        const fieldOrder = ['name', 'age', 'mobilenumber', 'country', 'email', 'password', 'confirmPassword'];
         const currentIndex = fieldOrder.indexOf(current);
         if (currentIndex < fieldOrder.length - 1) {
             const nextField = fieldOrder[currentIndex + 1];
@@ -116,9 +119,9 @@ const RegistrationPage = () => {
                     speakText('Typing mode activated. Please fill out the form.');
                 } else if (transcript.includes('speaking mode')) {
                     setMode('speaking');
-                    setCurrentField('username');
-                    speakText('Speaking mode activated. Please provide your username.', () =>
-                        startSpeechRecognition('username', () => proceedToNextField('username'))
+                    setCurrentField('name');
+                    speakText('Speaking mode activated. Please provide your name.', () =>
+                        startSpeechRecognition('name', () => proceedToNextField('name'))
                     );
                 } else {
                     speakText('Command not recognized. Please say "typing mode" or "speaking mode".');
@@ -162,12 +165,12 @@ const RegistrationPage = () => {
                 {listening && <p className="listening-indicator">Listening...</p>}
                 <form onSubmit={(e) => e.preventDefault()}>
                     <div>
-                        <label>Username</label>
+                        <label>Name</label>
                         <input
                             type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                            name="name"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         />
                     </div>
                     <div>

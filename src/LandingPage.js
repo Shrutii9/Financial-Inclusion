@@ -157,6 +157,9 @@ const LandingPage = () => {
 
     const handleHover = (text) => speakText(text);
 
+    const userName = localStorage.getItem('loggedInUser');
+    const userEmail = localStorage.getItem('loggedInUserEmail');
+    
     return (
         <div className="dbhack">
             <div className="top-bar">
@@ -166,9 +169,9 @@ const LandingPage = () => {
                 <div className="user-right">
                     <div
                         className="user-info"
-                        onMouseEnter={() => handleHover('Hi Naushad')}
+                        onMouseEnter={() => handleHover({userName})}
                     >
-                        Hi Naushad
+                        Hi {userName}
                     </div>
                     <img
                         src={logoutIcon}
