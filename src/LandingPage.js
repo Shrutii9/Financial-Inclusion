@@ -184,7 +184,7 @@ const LandingPage = () => {
             </div>
 
             <div className="home-section">
-                <h2>Home</h2>
+                {/* <h2>Home</h2> */}
 
                 <button
                     className="toggle-button"

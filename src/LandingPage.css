@@ -1,6 +1,6 @@
 .dbhack {
     font-family: Arial, sans-serif;
-    padding: 20px;
+    padding: 10px;
     background-color: #fdfdfd;
     color: #333;
 }
@@ -9,7 +9,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 10px;
     border-bottom: 1px solid #ccc;
 }
 
@@ -20,6 +19,12 @@
 
 .dbhack .brand {
     color: #337ab7;
+}
+
+.dbhack .toggle-button {
+    background-color: #F44336;
+    color: white;
+    margin-top: 10px;
 }
 
 .dbhack .user-info {
@@ -41,10 +46,9 @@
 }
 
 .dbhack .card {
-    flex: 1 1;
-    background: #f0f0f0;
-    padding: 35px;
-    border: 1px solid #ccc;
+    background: #e1f5fe;
+    padding: 15px 180px;
+    border: 1px solid #000000;
     border-radius: 6px;
     text-align: center;
     cursor: pointer;
@@ -83,11 +87,11 @@
 }
 
 .dbhack .quiz-section button {
-    padding: 75px 89px;
+    padding: 30px 80px;
     font-size: 20px;
     cursor: pointer;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+    background-color: #e8f5e9;
+    border: 1px solid #000000;
     border-radius: 5px;
 }
 
