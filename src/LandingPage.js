@@ -7,8 +7,7 @@ import analystIcon from './assets/icons/user.svg';
 import supportIcon from './assets/icons/support.svg';
 import elearningIcon from './assets/icons/elearning.png';
 import logoutIcon from './assets/icons/logout.png';
-
-
+import Bg from './assets/icons/pb1.jpg'
 
 const LandingPage = () => {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
