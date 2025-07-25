@@ -43,7 +43,7 @@
 .dbhack .card {
     flex: 1 1;
     background: #f0f0f0;
-    padding: 49px;
+    padding: 35px;
     border: 1px solid #ccc;
     border-radius: 6px;
     text-align: center;
@@ -83,7 +83,7 @@
 }
 
 .dbhack .quiz-section button {
-    padding: 105px 89px;
+    padding: 75px 89px;
     font-size: 20px;
     cursor: pointer;
     background-color: #f0f0f0;
